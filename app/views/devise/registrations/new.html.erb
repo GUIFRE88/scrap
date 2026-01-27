@@ -41,7 +41,9 @@
           <% end %>
 
           <div class="text-center">
-            <%= render "devise/shared/links" %>
+            <% if controller_name != 'sessions' %>
+              <%= link_to "Já tem uma conta? Entrar", new_session_path(resource_name), class: "btn btn-link" %><br />
+            <% end %>
           </div>
         </div>
       </div>

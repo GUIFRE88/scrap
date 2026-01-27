@@ -6,6 +6,4 @@
   <%= link_to "Não tem uma conta? Cadastrar", new_registration_path(resource_name), class: "btn btn-link" %><br />
 <% end %>
 
-<% if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-  <%= link_to "Esqueceu sua senha?", new_password_path(resource_name), class: "btn btn-link" %><br />
-<% end %>
+<%# Removido link "Esqueceu sua senha?" conforme solicitado %>
