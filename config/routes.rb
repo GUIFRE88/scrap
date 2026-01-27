@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { sessions: 'users/sessions' }
+  devise_for :users, controllers: { 
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
+  
+  get 'dashboard', to: 'home#dashboard', as: :dashboard
   
   authenticated :user do
     root 'home#dashboard', as: :authenticated_root
