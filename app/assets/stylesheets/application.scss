@@ -238,6 +238,55 @@ body::before {
   border-radius: 12px;
   border: none;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+// Alertas no topo (50% da tela)
+.top-alert {
+  width: 50% !important;
+  max-width: 50% !important;
+  min-width: 300px;
+}
+
+.top-alert-logged {
+  width: 50%;
+  max-width: 50%;
+  margin: 1rem auto !important;
+  display: block;
+  min-width: 300px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+  border-left: 4px solid #dc2626;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border-left: 4px solid #10b981;
+}
+
+.alert .btn-close {
+  opacity: 0.7;
+  
+  &:hover {
+    opacity: 1;
+  }
 }
 
 // Animações de entrada
@@ -298,5 +347,11 @@ body::before {
   
   .dashboard-container {
     padding: 2rem 1rem;
+  }
+  
+  .top-alert,
+  .top-alert-logged {
+    width: 90% !important;
+    max-width: 90% !important;
   }
 }

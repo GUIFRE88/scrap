@@ -33,18 +33,36 @@
     <% end %>
 
     <main class="main-content">
-      <% if notice %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <%= notice %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-      <% end %>
+      <% unless user_signed_in? %>
+        <%# Alertas globais apenas quando não estiver na área de autenticação %>
+        <% if notice %>
+          <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 top-alert" role="alert" style="z-index: 9999; width: 50%; border-radius: 12px; box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);">
+            <%= notice %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
 
-      <% if alert %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <%= alert %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <% if alert && controller_name != 'sessions' && controller_name != 'registrations' %>
+          <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 top-alert" role="alert" style="z-index: 9999; width: 50%; border-radius: 12px; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);">
+            <%= alert %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
+      <% else %>
+        <%# Alertas na área logada %>
+        <% if notice %>
+          <div class="alert alert-success alert-dismissible fade show top-alert-logged" role="alert" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(25, 135, 84, 0.2);">
+            <%= notice %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
+
+        <% if alert %>
+          <div class="alert alert-danger alert-dismissible fade show top-alert-logged" role="alert" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);">
+            <%= alert %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
       <% end %>
 
       <%= yield %>
