@@ -1,13 +1,45 @@
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-12">
-      <div class="card shadow">
-        <div class="card-body p-5">
-          <h1 class="display-4 mb-4">Bem-vindo ao Scrap!</h1>
-          <p class="lead">Você está logado como: <strong><%= current_user.email %></strong></p>
-          <p class="text-muted">Esta é a área logada da aplicação.</p>
+<div class="dashboard-container">
+  <div class="dashboard-card fade-in">
+    <div class="text-center mb-5">
+      <h1 class="display-4 mb-3" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">
+        Bem-vindo ao Scrap!
+      </h1>
+      <p class="lead text-muted">Sua plataforma de web scraping</p>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                <span style="color: white; font-size: 1.5rem;">📊</span>
+              </div>
+              <h5 class="mb-0 ms-3">Dados Extraídos</h5>
+            </div>
+            <p class="text-muted mb-0">Gerencie todos os seus projetos de scraping em um só lugar.</p>
+          </div>
         </div>
       </div>
+      
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-secondary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);">
+                <span style="color: white; font-size: 1.5rem;">⚡</span>
+              </div>
+              <h5 class="mb-0 ms-3">Performance</h5>
+            </div>
+            <p class="text-muted mb-0">Extraia dados de forma rápida e eficiente.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-4 p-4 rounded" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-radius: 16px;">
+      <p class="mb-2"><strong>Usuário:</strong> <%= current_user.email %></p>
+      <p class="mb-0 text-muted">Esta é a sua área logada. Comece a criar seus projetos de scraping!</p>
     </div>
   </div>
 </div>

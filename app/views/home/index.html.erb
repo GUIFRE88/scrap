@@ -1,18 +1,18 @@
-<div class="container">
-  <div class="row justify-content-center align-items-center min-vh-100">
-    <div class="col-md-6 col-lg-4">
-      <div class="card shadow">
-        <div class="card-body p-5">
-          <div class="text-center mb-4">
-            <h1 class="h3 mb-3">Scrap</h1>
-            <p class="text-muted">Bem-vindo ao Scrap</p>
-          </div>
-
-          <div class="d-grid gap-2">
-            <%= link_to "Entrar", new_user_session_path, class: "btn btn-primary btn-lg" %>
-            <%= link_to "Cadastrar", new_user_registration_path, class: "btn btn-outline-primary btn-lg" %>
-          </div>
-        </div>
+<div class="auth-container">
+  <div class="auth-card fade-in">
+    <div class="auth-card-header">
+      <h2>Scrap</h2>
+      <p>Bem-vindo à plataforma de web scraping</p>
+    </div>
+    
+    <div class="auth-card-body">
+      <div class="text-center mb-4">
+        <p class="text-muted">Comece a extrair dados da web de forma eficiente</p>
+      </div>
+      
+      <div class="d-grid gap-3">
+        <%= link_to "Entrar", new_user_session_path, class: "btn btn-primary" %>
+        <%= link_to "Criar Conta", new_user_registration_path, class: "btn btn-outline-primary", style: "border: 2px solid #6366f1; color: #6366f1; font-weight: 600;" %>
       </div>
     </div>
   </div>
