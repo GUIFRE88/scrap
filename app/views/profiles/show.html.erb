@@ -1,74 +1,196 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="mb-0"><%= @profile.name %></h1>
-    <div>
-      <%= link_to "Editar", edit_profile_path(@profile), class: "btn btn-outline-secondary me-2" %>
-      <%= button_to "Re-escanear", rescan_profile_path(@profile), method: :post, class: "btn btn-outline-warning me-2" %>
-      <%= button_to "Excluir", profile_path(@profile), method: :delete, data: { confirm: "Tem certeza que deseja excluir este perfil?" }, class: "btn btn-outline-danger" %>
+  <!-- Header com nome e botões de ação -->
+  <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="mb-0 fw-bold"><%= @profile.name %></h1>
+      <div class="d-flex gap-2">
+        <%= link_to edit_profile_path(@profile), class: "btn btn-outline-secondary" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
+            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+          </svg>
+          Editar
+        <% end %>
+        <%= button_to rescan_profile_path(@profile), method: :post, class: "btn btn-outline-warning" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise me-1" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+          </svg>
+          Re-escanear
+        <% end %>
+        <%= button_to profile_path(@profile), method: :delete, data: { confirm: "Tem certeza que deseja excluir este perfil?" }, class: "btn btn-outline-danger" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash me-1" viewBox="0 0 16 16">
+            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>
+          Excluir
+        <% end %>
+      </div>
     </div>
+    <%= link_to dashboard_path, class: "btn btn-outline-light" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+      </svg>
+      Voltar para o dashboard
+    <% end %>
   </div>
 
-  <div class="row">
-    <div class="col-md-4 mb-3">
-      <% if @profile.avatar_url.present? %>
-        <img src="<%= @profile.avatar_url %>" alt="Avatar" class="img-fluid rounded shadow-sm">
-      <% else %>
-        <div class="border rounded d-flex align-items-center justify-content-center" style="height: 200px;">
-          <span class="text-muted">Sem imagem de perfil</span>
-        </div>
-      <% end %>
-    </div>
-
-    <div class="col-md-8">
-      <dl class="row">
-        <dt class="col-sm-3">Nome</dt>
-        <dd class="col-sm-9"><%= @profile.name %></dd>
-
-        <dt class="col-sm-3">URL Github</dt>
-        <dd class="col-sm-9">
-          <%= link_to @profile.github_url, @profile.github_url, target: "_blank", rel: "noopener" %>
-        </dd>
-
-        <dt class="col-sm-3">URL encurtada</dt>
-        <dd class="col-sm-9">
-          <% if @profile.short_code.present? %>
-            <%= link_to short_profile_url(@profile.short_code), short_profile_url(@profile.short_code), target: "_blank", rel: "noopener" %>
+  <div class="row g-4">
+    <!-- Coluna esquerda: Avatar e informações básicas -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center p-4">
+          <% if @profile.avatar_url.present? %>
+            <img src="<%= @profile.avatar_url %>" alt="Avatar" class="img-fluid rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #f0f0f0;">
           <% else %>
-            -
+            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 bg-light" style="width: 200px; height: 200px; border: 4px solid #f0f0f0;">
+              <span class="text-muted">Sem foto</span>
+            </div>
           <% end %>
-        </dd>
+          
+          <h3 class="fw-bold mb-2"><%= @profile.name %></h3>
+          
+          <% if @profile.github_username.present? %>
+            <p class="text-muted mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github me-1" viewBox="0 0 16 16">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+              @<%= @profile.github_username %>
+            </p>
+          <% end %>
 
-        <dt class="col-sm-3">Usuário Github</dt>
-        <dd class="col-sm-9"><%= @profile.github_username %></dd>
-
-        <dt class="col-sm-3">Followers</dt>
-        <dd class="col-sm-9"><%= @profile.followers_count || 0 %></dd>
-
-        <dt class="col-sm-3">Following</dt>
-        <dd class="col-sm-9"><%= @profile.following_count || 0 %></dd>
-
-        <dt class="col-sm-3">Stars</dt>
-        <dd class="col-sm-9"><%= @profile.stars_count || 0 %></dd>
-
-        <dt class="col-sm-3">Contribuições (último ano)</dt>
-        <dd class="col-sm-9"><%= @profile.contributions_last_year || 0 %></dd>
-
-        <dt class="col-sm-3">Organização</dt>
-        <dd class="col-sm-9"><%= @profile.organization.presence || "-" %></dd>
-
-        <dt class="col-sm-3">Localização</dt>
-        <dd class="col-sm-9"><%= @profile.location.presence || "-" %></dd>
-
-        <dt class="col-sm-3">Último scan</dt>
-        <dd class="col-sm-9">
-          <%= @profile.last_scanned_at ? @profile.last_scanned_at.strftime("%d/%m/%Y %H:%M") : "Nunca" %>
-        </dd>
-      </dl>
+          <div class="d-grid gap-2">
+            <%= link_to @profile.github_url, target: "_blank", rel: "noopener", class: "btn btn-primary" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right me-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+              </svg>
+              Ver no Github
+            <% end %>
+            
+            <% if @profile.short_code.present? %>
+              <%= link_to short_profile_url(@profile.short_code), target: "_blank", rel: "noopener", class: "btn btn-outline-primary" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-1" viewBox="0 0 16 16">
+                  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+                </svg>
+                URL Encurtada
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="mt-3">
-    <%= link_to "Voltar para o dashboard", dashboard_path, class: "btn btn-outline-secondary" %>
+    <!-- Coluna direita: Estatísticas e informações detalhadas -->
+    <div class="col-lg-8">
+      <!-- Cards de estatísticas -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+          <div class="card border-0 shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="text-primary mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                  <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.629 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+                </svg>
+              </div>
+              <h4 class="fw-bold mb-0"><%= @profile.followers_count || 0 %></h4>
+              <small class="text-muted">Followers</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="card border-0 shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="text-info mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                </svg>
+              </div>
+              <h4 class="fw-bold mb-0"><%= @profile.following_count || 0 %></h4>
+              <small class="text-muted">Following</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="card border-0 shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="text-warning mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                </svg>
+              </div>
+              <h4 class="fw-bold mb-0"><%= @profile.stars_count || 0 %></h4>
+              <small class="text-muted">Stars</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="card border-0 shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="text-success mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
+                </svg>
+              </div>
+              <h4 class="fw-bold mb-0"><%= @profile.contributions_last_year || 0 %></h4>
+              <small class="text-muted">Contribuições</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card com informações detalhadas -->
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 fw-bold">Informações Detalhadas</h5>
+        </div>
+        <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-4 fw-semibold text-muted">Nome</dt>
+            <dd class="col-sm-8 mb-3"><%= @profile.name %></dd>
+
+            <dt class="col-sm-4 fw-semibold text-muted">URL Github</dt>
+            <dd class="col-sm-8 mb-3">
+              <%= link_to @profile.github_url, @profile.github_url, target: "_blank", rel: "noopener", class: "text-decoration-none" %>
+            </dd>
+
+            <% if @profile.short_code.present? %>
+              <dt class="col-sm-4 fw-semibold text-muted">URL encurtada</dt>
+              <dd class="col-sm-8 mb-3">
+                <%= link_to short_profile_url(@profile.short_code), short_profile_url(@profile.short_code), target: "_blank", rel: "noopener", class: "text-decoration-none" %>
+              </dd>
+            <% end %>
+
+            <% if @profile.organization.present? %>
+              <dt class="col-sm-4 fw-semibold text-muted">Organização</dt>
+              <dd class="col-sm-8 mb-3"><%= @profile.organization %></dd>
+            <% end %>
+
+            <% if @profile.location.present? %>
+              <dt class="col-sm-4 fw-semibold text-muted">Localização</dt>
+              <dd class="col-sm-8 mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt me-1" viewBox="0 0 16 16">
+                  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57C5.14 11.253 4.5 10.143 4.5 9a4.5 4.5 0 0 1 9 0c0 1.143-.64 2.253-1.294 3.01z"/>
+                  <path fill-rule="evenodd" d="M8 4.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM5.5 8a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0z"/>
+                </svg>
+                <%= @profile.location %>
+              </dd>
+            <% end %>
+
+            <dt class="col-sm-4 fw-semibold text-muted">Último scan</dt>
+            <dd class="col-sm-8 mb-0">
+              <% if @profile.last_scanned_at %>
+                <span class="badge bg-secondary">
+                  <%= @profile.last_scanned_at.strftime("%d/%m/%Y %H:%M") %>
+                </span>
+              <% else %>
+                <span class="text-muted">Nunca</span>
+              <% end %>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-

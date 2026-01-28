@@ -1,18 +1,16 @@
 <div class="dashboard-container">
   <div class="dashboard-card fade-in">
-    <div class="text-center mb-5">
-      <h1 class="display-4 mb-3" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">
+    <div class="text-center mb-4">
+      <h1 class="display-4 mb-2" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">
         Bem-vindo ao Scrap!
       </h1>
-      <p class="lead text-muted">Sua plataforma de web scraping</p>
+      <p class="lead text-muted mb-0">Sua plataforma de web scraping</p>
     </div>
     
-    
-    
-    <div class="mt-5">
+    <div class="mt-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4 mb-0">Perfis Github</h2>
-        <%= link_to "Novo Perfil", new_profile_path, class: "btn btn-primary" %>
+        <h2 class="h5 mb-0 fw-bold">Perfis Github</h2>
+        <%= link_to "Novo Perfil", new_profile_path, class: "btn btn-primary btn-sm" %>
       </div>
 
       <%= render "profiles/search_form" %>

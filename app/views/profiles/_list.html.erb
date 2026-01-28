@@ -1,37 +1,60 @@
 <% if @profiles.present? %>
-  <div class="table-responsive mt-3">
-    <table class="table align-middle">
-      <thead>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-2">
+      <thead class="table-light">
         <tr>
-          <th>Nome</th>
-          <th>Nick Github</th>
-          <th>URL encurtada</th>
-          <th>Followers</th>
-          <th>Following</th>
-          <th>Stars</th>
-          <th></th>
+          <th class="border-0">Nome</th>
+          <th class="border-0">Nick Github</th>
+          <th class="border-0 d-none d-md-table-cell">URL encurtada</th>
+          <th class="border-0 text-center">Followers</th>
+          <th class="border-0 text-center">Following</th>
+          <th class="border-0 text-center">Stars</th>
+          <th class="border-0 text-end" style="width: 140px;">Ações</th>
         </tr>
       </thead>
       <tbody>
         <% @profiles.each do |profile| %>
           <tr>
-            <td><%= profile.name %></td>
-            <td><%= profile.github_username %></td>
-            <td>
+            <td class="fw-medium"><%= profile.name %></td>
+            <td><%= profile.github_username || "-" %></td>
+            <td class="d-none d-md-table-cell">
               <% if profile.short_code.present? %>
-                <%= link_to short_profile_url(profile.short_code), short_profile_url(profile.short_code), target: "_blank", rel: "noopener" %>
+                <%= link_to short_profile_url(profile.short_code), target: "_blank", rel: "noopener", class: "text-decoration-none" do %>
+                  <small class="text-primary"><%= short_profile_url(profile.short_code) %></small>
+                <% end %>
               <% else %>
-                -
+                <span class="text-muted">-</span>
               <% end %>
             </td>
-            <td><%= profile.followers_count || 0 %></td>
-            <td><%= profile.following_count || 0 %></td>
-            <td><%= profile.stars_count || 0 %></td>
+            <td class="text-center"><%= profile.followers_count || 0 %></td>
+            <td class="text-center"><%= profile.following_count || 0 %></td>
+            <td class="text-center"><%= profile.stars_count || 0 %></td>
             <td class="text-end">
-              <%= link_to "Ver", profile_path(profile), class: "btn btn-sm btn-outline-primary me-1" %>
-              <%= link_to "Editar", edit_profile_path(profile), class: "btn btn-sm btn-outline-secondary me-1" %>
-              <%= button_to "Re-escanear", rescan_profile_path(profile), method: :post, class: "btn btn-sm btn-outline-warning me-1" %>
-              <%= button_to "Excluir", profile_path(profile), method: :delete, data: { confirm: "Tem certeza que deseja excluir este perfil?" }, class: "btn btn-sm btn-outline-danger" %>
+              <div class="d-flex gap-1 justify-content-end">
+                <%= link_to profile_path(profile), class: "btn btn-sm btn-outline-primary p-1", title: "Ver", data: { bs_toggle: "tooltip" }, style: "width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.88 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.88-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                  </svg>
+                <% end %>
+                <%= link_to edit_profile_path(profile), class: "btn btn-sm btn-outline-secondary p-1", title: "Editar", data: { bs_toggle: "tooltip" }, style: "width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                  </svg>
+                <% end %>
+                <%= button_to rescan_profile_path(profile), method: :post, class: "btn btn-sm btn-outline-warning p-1", title: "Re-escanear", data: { bs_toggle: "tooltip" }, form: { class: "d-inline" }, style: "width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                  </svg>
+                <% end %>
+                <%= button_to profile_path(profile), method: :delete, data: { confirm: "Tem certeza que deseja excluir este perfil?", bs_toggle: "tooltip" }, class: "btn btn-sm btn-outline-danger p-1", title: "Excluir", form: { class: "d-inline" }, style: "width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                <% end %>
+              </div>
             </td>
           </tr>
         <% end %>
@@ -39,10 +62,21 @@
     </table>
   </div>
 
-  <div class="d-flex justify-content-center mt-3">
-    <%= will_paginate @profiles %>
+  <div class="d-flex justify-content-center mt-2">
+    <%= will_paginate @profiles, class: "pagination-sm" %>
   </div>
 <% else %>
-  <p class="text-muted mt-3">Nenhum perfil encontrado.</p>
+  <div class="text-center py-4">
+    <p class="text-muted mb-0">Nenhum perfil encontrado.</p>
+  </div>
 <% end %>
 
+<script>
+  // Inicializar tooltips do Bootstrap
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
