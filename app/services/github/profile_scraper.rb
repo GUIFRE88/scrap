@@ -39,7 +39,7 @@ module Github
       end
 
       def extract_username(doc)
-        doc.css('p.p-nickname.vcard-username.d-block').text.strip.presence
+        doc.css('span.p-nickname.vcard-username.d-block').text.strip.presence
       end
 
       def extract_number(doc, selector)

@@ -18,8 +18,13 @@ class ProfilesController < ApplicationController
     Shortener::EncodeUrl.call(@profile)
 
     if @profile.save
-      run_scraper(@profile)
-      redirect_to @profile, notice: "Perfil criado com sucesso."
+      result = Profiles::ScrapeAndUpdate.call(@profile)
+      if result[:success]
+        redirect_to @profile, notice: "Perfil criado com sucesso."
+      else
+        flash[:alert] = "Perfil criado, mas houve erro ao extrair os dados do Github."
+        redirect_to @profile
+      end
     else
       flash.now[:alert] = "Não foi possível criar o perfil."
       render :new, status: :unprocessable_entity
@@ -30,8 +35,13 @@ class ProfilesController < ApplicationController
 
   def update
     if @profile.update(profile_params)
-      run_scraper(@profile)
-      redirect_to @profile, notice: "Perfil atualizado com sucesso."
+      result = Profiles::ScrapeAndUpdate.call(@profile)
+      if result[:success]
+        redirect_to @profile, notice: "Perfil atualizado com sucesso."
+      else
+        flash[:alert] = "Perfil atualizado, mas houve erro ao extrair os dados do Github."
+        redirect_to @profile
+      end
     else
       flash.now[:alert] = "Não foi possível atualizar o perfil."
       render :edit, status: :unprocessable_entity
@@ -44,10 +54,12 @@ class ProfilesController < ApplicationController
   end
 
   def rescan
-    run_scraper(@profile)
-    redirect_to @profile, notice: "Perfil re-escaneado com sucesso."
-  rescue Github::ProfileScraper::Error => e
-    redirect_to @profile, alert: "Erro ao re-escanear perfil: #{e.message}"
+    result = Profiles::ScrapeAndUpdate.call(@profile)
+    if result[:success]
+      redirect_to @profile, notice: "Perfil re-escaneado com sucesso."
+    else
+      redirect_to @profile, alert: "Erro ao re-escanear perfil: #{result[:message]}"
+    end
   end
 
   def redirect
@@ -69,24 +81,6 @@ class ProfilesController < ApplicationController
 
   def profile_params
     params.require(:profile).permit(:name, :github_url)
-  end
-
-  def run_scraper(profile)
-    data = Github::ProfileScraper.call(profile.github_url)
-    profile.update!(
-      github_username: data[:github_username],
-      followers_count: data[:followers_count],
-      following_count: data[:following_count],
-      stars_count: data[:stars_count],
-      contributions_last_year: data[:contributions_last_year],
-      avatar_url: data[:avatar_url],
-      organization: data[:organization],
-      location: data[:location],
-      last_scanned_at: Time.current
-    )
-  rescue Github::ProfileScraper::Error => e
-    Rails.logger.error("[ProfilesController] Scraper error for #{profile.github_url}: #{e.message}")
-    flash[:alert] = "Perfil salvo, mas houve erro ao extrair os dados do Github."
   end
 end
 
