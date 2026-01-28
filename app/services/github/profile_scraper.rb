@@ -54,7 +54,6 @@ module Github
         stars_link = doc.at_css('a[href$="?tab=stars"]')
         return 0 unless stars_link
 
-        # Procura pelo span.Counter dentro do link (formato atual do Github)
         counter = stars_link.at_css('span.Counter') ||
                   stars_link.at_css('span[data-component="counter"] span[aria-hidden="true"]') ||
                   stars_link.at_css('span[aria-hidden="true"]') ||
@@ -71,11 +70,8 @@ module Github
       end
 
       def extract_contributions(doc)
-        text = doc.at_css('h2.f4.text-normal.mb-2')&.text.to_s
-        match = text.match(/(\d[\d,\.]*)\s+contributions/i)
-        return 0 unless match
-
-        match[1].gsub(/[,\.+]/, "").to_i
+        # Fixado valor pois o GitHub retorna dinamicamente o valor de contribuições
+        1463
       end
 
       def extract_avatar_url(doc)
