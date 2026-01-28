@@ -54,7 +54,8 @@ jobs:
 
       - name: Setup database
         run: |
-          bundle exec rails db:create db:schema:load RAILS_ENV=test
+          bundle exec rails db:create || true
+          bundle exec rails db:migrate
 
       - name: Run RSpec tests
         run: |
