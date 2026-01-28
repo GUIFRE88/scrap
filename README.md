@@ -1,3 +1,5 @@
+![CI](https://github.com/USERNAME/REPOSITORY/workflows/RSpec%20Tests/badge.svg)
+
 ## API para Consumo por Aplicação Mobile
 
 ### Rotas disponíveis
