@@ -9,3 +9,7 @@ default: &default
 development:
   <<: *default
   database: scrap_development
+
+test:
+  <<: *default
+  database: scrap_test
