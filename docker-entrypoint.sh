@@ -26,5 +26,13 @@ if [ ! -f config/application.rb ]; then
   echo "Aplicação Rails criada com sucesso!"
 fi
 
+# Sempre verifica e instala gems se necessário (útil quando Gemfile.lock está desatualizado)
+if bundle check; then
+  echo "Todas as gems estão instaladas."
+else
+  echo "Instalando gems faltantes..."
+  bundle install
+fi
+
 # Executa o servidor Rails
 exec rails server -b 0.0.0.0
