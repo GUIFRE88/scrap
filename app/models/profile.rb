@@ -1,17 +1,13 @@
 class Profile < ApplicationRecord
-  # Associations
   belongs_to :user
 
-  # Validations
   validates :name, presence: true
   validates :github_url, presence: true, format: { with: %r{\Ahttps?://(www\.)?github\.com/}i }
   validates :short_code, uniqueness: true, allow_nil: true
 
-  # Scopes
   scope :search, lambda { |query|
     return all if query.blank?
 
-    # Remove espaços em branco no início e fim da query
     cleaned_query = query.to_s.strip
     return all if cleaned_query.blank?
 
@@ -27,7 +23,6 @@ class Profile < ApplicationRecord
       "LOWER(short_code) LIKE :q"
     ]
     
-    # Adiciona busca numérica se a query for um número
     if numeric_query > 0
       conditions << "followers_count = :nq"
       conditions << "following_count = :nq"
