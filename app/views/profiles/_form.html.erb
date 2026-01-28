@@ -1,0 +1,28 @@
+<%= form_with(model: @profile, local: true) do |form| %>
+  <% if @profile.errors.any? %>
+    <div class="alert alert-danger">
+      <p><strong><%= pluralize(@profile.errors.count, "erro") %> impediram o salvamento deste perfil:</strong></p>
+      <ul class="mb-0">
+        <% @profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, "Nome", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :github_url, "Endereço web Github", class: "form-label" %>
+    <%= form.url_field :github_url, class: "form-control", placeholder: "https://github.com/usuario", required: true %>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <%= link_to "Voltar", dashboard_path, class: "btn btn-outline-secondary" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
+

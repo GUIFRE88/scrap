@@ -1,0 +1,48 @@
+<% if @profiles.present? %>
+  <div class="table-responsive mt-3">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Nick Github</th>
+          <th>URL encurtada</th>
+          <th>Followers</th>
+          <th>Following</th>
+          <th>Stars</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @profiles.each do |profile| %>
+          <tr>
+            <td><%= profile.name %></td>
+            <td><%= profile.github_username %></td>
+            <td>
+              <% if profile.short_code.present? %>
+                <%= link_to short_profile_url(profile.short_code), short_profile_url(profile.short_code), target: "_blank", rel: "noopener" %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+            <td><%= profile.followers_count || 0 %></td>
+            <td><%= profile.following_count || 0 %></td>
+            <td><%= profile.stars_count || 0 %></td>
+            <td class="text-end">
+              <%= link_to "Ver", profile_path(profile), class: "btn btn-sm btn-outline-primary me-1" %>
+              <%= link_to "Editar", edit_profile_path(profile), class: "btn btn-sm btn-outline-secondary me-1" %>
+              <%= button_to "Re-escanear", rescan_profile_path(profile), method: :post, class: "btn btn-sm btn-outline-warning me-1" %>
+              <%= button_to "Excluir", profile_path(profile), method: :delete, data: { confirm: "Tem certeza que deseja excluir este perfil?" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <%= will_paginate @profiles %>
+  </div>
+<% else %>
+  <p class="text-muted mt-3">Nenhum perfil encontrado.</p>
+<% end %>
+

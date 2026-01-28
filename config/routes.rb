@@ -4,6 +4,14 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   
+  resources :profiles do
+    member do
+      post :rescan
+    end
+  end
+
+  get '/p/:short_code', to: 'profiles#redirect', as: :short_profile
+  
   get 'dashboard', to: 'home#dashboard', as: :dashboard
   
   authenticated :user do

@@ -19,11 +19,14 @@ services:
   web:
     build: .
     container_name: scrap_web
+    stdin_open: true
+    tty: true
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
+      - "12345:12345"
     depends_on:
       db:
         condition: service_healthy

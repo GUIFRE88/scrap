@@ -7,34 +7,16 @@
       <p class="lead text-muted">Sua plataforma de web scraping</p>
     </div>
     
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
-          <div class="card-body p-4">
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                <span style="color: white; font-size: 1.5rem;">📊</span>
-              </div>
-              <h5 class="mb-0 ms-3">Dados Extraídos</h5>
-            </div>
-            <p class="text-muted mb-0">Gerencie todos os seus projetos de scraping em um só lugar.</p>
-          </div>
-        </div>
+    
+    
+    <div class="mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Perfis Github</h2>
+        <%= link_to "Novo Perfil", new_profile_path, class: "btn btn-primary" %>
       </div>
-      
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
-          <div class="card-body p-4">
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-secondary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);">
-                <span style="color: white; font-size: 1.5rem;">⚡</span>
-              </div>
-              <h5 class="mb-0 ms-3">Performance</h5>
-            </div>
-            <p class="text-muted mb-0">Extraia dados de forma rápida e eficiente.</p>
-          </div>
-        </div>
-      </div>
+
+      <%= render "profiles/search_form" %>
+      <%= render "profiles/list" %>
     </div>
   </div>
 </div>

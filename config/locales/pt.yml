@@ -82,3 +82,8 @@ pt:
       not_saved: "Houve %{count} erro ao salvar %{resource}:"
       not_saved_one: "Houve 1 erro ao salvar %{resource}:"
       not_saved_other: "Houve %{count} erros ao salvar %{resource}:"
+  time:
+    formats:
+      short: "%d/%m/%Y %H:%M"
+      default: "%d/%m/%Y %H:%M:%S"
+      long: "%d de %B de %Y às %H:%M"

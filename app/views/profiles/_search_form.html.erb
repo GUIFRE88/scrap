@@ -1,0 +1,13 @@
+<div class="mt-3">
+  <%= form_with url: request.path, method: :get, local: true, class: "row g-2 align-items-center" do |form| %>
+    <div class="col-md-8">
+      <%= form.label :q, "Buscar perfis", class: "form-label" %>
+      <%= form.text_field :q, value: @query, class: "form-control", placeholder: "Nome, usuário do Github, organização, localização..." %>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <%= form.submit "Buscar", class: "btn btn-primary me-2" %>
+      <%= link_to "Limpar", request.path, class: "btn btn-outline-secondary" %>
+    </div>
+  <% end %>
+</div>
+

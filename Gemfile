@@ -43,6 +43,13 @@ gem "devise"
 gem "bootstrap", "~> 5.3"
 gem "sassc-rails"
 
+# Pagination
+gem "will_paginate", "~> 3.3"
+
+# HTTP client and HTML parser for web scraping
+gem "httparty"
+gem "nokogiri"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
@@ -58,6 +65,8 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  # Debugger for Ruby
+  gem "byebug"
 end
 
 group :development do
