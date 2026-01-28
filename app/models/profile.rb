@@ -38,5 +38,24 @@ class Profile < ApplicationRecord
       where(conditions.join(" OR "), q: q)
     end
   }
+
+  def short_github_url
+    return nil if short_code.blank?
+
+    host =
+      if Rails.application.config.respond_to?(:action_mailer) &&
+         Rails.application.config.action_mailer.respond_to?(:default_url_options) &&
+         Rails.application.config.action_mailer.default_url_options.present?
+        Rails.application.config.action_mailer.default_url_options[:host]
+      end
+
+    host ||= 'localhost:3000'
+
+    Rails.application.routes.url_helpers.short_profile_url(short_code, host: host)
+  end
+
+  def organizations_array
+    organization.present? ? [organization] : []
+  end
 end
 
