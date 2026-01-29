@@ -12,6 +12,7 @@ SimpleCov.start 'rails' do
   add_group 'Controllers', 'app/controllers'
   add_group 'Models', 'app/models'
   add_group 'Services', 'app/services'
+  add_group 'Repositories', 'app/repositories'
   add_group 'Helpers', 'app/helpers'
 end
 
