@@ -15,5 +15,10 @@ test:
   database: scrap_test
 
 production:
-  url: <%= ENV['DATABASE_URL'] %>
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  adapter: postgresql
+  encoding: unicode
+  host: postgres.railway.internal
+  username: postgres
+  password: sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG
+  pool: 5
+  url: postgresql://postgres:sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG@postgres.railway.internal:5432/railway
