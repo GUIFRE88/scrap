@@ -93,7 +93,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Allow Railway host (fixed)
-  config.hosts << "scrap-production-8543.up.railway.app"
+  config.hosts << "scrap-840t.onrender.com"
 end
 
-Rails.application.config.hosts << "scrap-production-8543.up.railway.app"
+Rails.application.config.hosts << "scrap-840t.onrender.com"

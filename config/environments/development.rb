@@ -42,7 +42,7 @@ Rails.application.configure do
 
   config.assets.quiet = true
 
-  config.hosts << "scrap-production-8543.up.railway.app"
+  config.hosts << "scrap-840t.onrender.com"
 end
 
-Rails.application.config.hosts << "scrap-production-8543.up.railway.app"
+Rails.application.config.hosts << "scrap-840t.onrender.com"
