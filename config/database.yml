@@ -1,10 +1,11 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: db
+  host: postgres.railway.internal
   username: postgres
-  password: postgres
+  password: sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG
   pool: 5
+  url: postgresql://postgres:sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG@postgres.railway.internal:5432/railway
 
 development:
   <<: *default
