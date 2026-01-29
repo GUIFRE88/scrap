@@ -32,3 +32,4 @@
 
 # Ignore SimpleCov coverage reports
 /coverage
+/spec/examples.txt

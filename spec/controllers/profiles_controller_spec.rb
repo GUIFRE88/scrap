@@ -79,46 +79,54 @@ RSpec.describe ProfilesController, type: :controller do
 
     context "with valid params" do
       before do
-        allow(Shortener::EncodeUrl).to receive(:call)
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return({ success: true })
+        allow(Profiles::Create).to receive(:call).and_return({
+          success: true,
+          profile: profile,
+          scrape_success: true
+        })
       end
 
-      it "creates a new profile" do
-        expect {
-          post :create, params: { profile: valid_attributes }
-        }.to change(Profile, :count).by(1)
-      end
-
-      it "redirects to the profile" do
-        post :create, params: { profile: valid_attributes }
-        expect(response).to redirect_to(Profile.last)
-        expect(flash[:notice]).to be_present
-      end
-
-      it "calls Shortener::EncodeUrl" do
-        expect(Shortener::EncodeUrl).to receive(:call)
+      it "calls Profiles::Create service" do
+        expect(Profiles::Create).to receive(:call).with(
+          user: user,
+          profile_params: ActionController::Parameters.new(valid_attributes).permit!
+        )
         post :create, params: { profile: valid_attributes }
       end
 
-      it "calls Profiles::ScrapeAndUpdate" do
-        expect(Profiles::ScrapeAndUpdate).to receive(:call)
+      it "redirects to the profile with notice" do
         post :create, params: { profile: valid_attributes }
+        expect(response).to redirect_to(profile)
+        expect(flash[:notice]).to eq("Perfil criado com sucesso.")
       end
 
       context "when scraping fails" do
         before do
-          allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return({ success: false })
+          allow(Profiles::Create).to receive(:call).and_return({
+            success: true,
+            profile: profile,
+            scrape_success: false
+          })
         end
 
-        it "still redirects but with alert" do
+        it "redirects but with alert" do
           post :create, params: { profile: valid_attributes }
-          expect(response).to redirect_to(Profile.last)
-          expect(flash[:alert]).to be_present
+          expect(response).to redirect_to(profile)
+          expect(flash[:alert]).to eq("Perfil criado, mas houve erro ao extrair os dados do Github.")
         end
       end
     end
 
     context "with invalid params" do
+      before do
+        invalid_profile = build(:profile, name: "", user: user)
+        allow(Profiles::Create).to receive(:call).and_return({
+          success: false,
+          profile: invalid_profile,
+          errors: invalid_profile.errors
+        })
+      end
+
       it "does not create a profile" do
         expect {
           post :create, params: { profile: { name: "" } }
@@ -128,6 +136,12 @@ RSpec.describe ProfilesController, type: :controller do
       it "renders new template" do
         post :create, params: { profile: { name: "" } }
         expect(response).to render_template(:new)
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "sets flash alert" do
+        post :create, params: { profile: { name: "" } }
+        expect(flash.now[:alert]).to eq("Não foi possível criar o perfil.")
       end
     end
   end
@@ -154,38 +168,62 @@ RSpec.describe ProfilesController, type: :controller do
 
     context "with valid params" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return({ success: true })
+        allow(Profiles::Update).to receive(:call).and_return({
+          success: true,
+          profile: profile,
+          scrape_success: true
+        })
       end
 
-      it "updates the profile" do
+      it "calls Profiles::Update service" do
+        expect(Profiles::Update).to receive(:call).with(
+          profile: profile,
+          profile_params: ActionController::Parameters.new(update_attributes).permit!
+        )
         patch :update, params: { id: profile.id, profile: update_attributes }
-        profile.reload
-        expect(profile.name).to eq("Updated Name")
       end
 
-      it "redirects to the profile" do
+      it "redirects to the profile with notice" do
         patch :update, params: { id: profile.id, profile: update_attributes }
         expect(response).to redirect_to(profile)
-        expect(flash[:notice]).to be_present
+        expect(flash[:notice]).to eq("Perfil atualizado com sucesso.")
       end
 
-      it "calls Profiles::ScrapeAndUpdate" do
-        expect(Profiles::ScrapeAndUpdate).to receive(:call)
-        patch :update, params: { id: profile.id, profile: update_attributes }
+      context "when scraping fails" do
+        before do
+          allow(Profiles::Update).to receive(:call).and_return({
+            success: true,
+            profile: profile,
+            scrape_success: false
+          })
+        end
+
+        it "redirects but with alert" do
+          patch :update, params: { id: profile.id, profile: update_attributes }
+          expect(response).to redirect_to(profile)
+          expect(flash[:alert]).to eq("Perfil atualizado, mas houve erro ao extrair os dados do Github.")
+        end
       end
     end
 
     context "with invalid params" do
-      it "does not update the profile" do
-        original_name = profile.name
-        patch :update, params: { id: profile.id, profile: { name: "" } }
-        profile.reload
-        expect(profile.name).to eq(original_name)
+      before do
+        allow(Profiles::Update).to receive(:call).and_return({
+          success: false,
+          profile: profile,
+          errors: profile.errors
+        })
       end
 
       it "renders edit template" do
         patch :update, params: { id: profile.id, profile: { name: "" } }
         expect(response).to render_template(:edit)
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "sets flash alert" do
+        patch :update, params: { id: profile.id, profile: { name: "" } }
+        expect(flash.now[:alert]).to eq("Não foi possível atualizar o perfil.")
       end
     end
   end
@@ -193,44 +231,71 @@ RSpec.describe ProfilesController, type: :controller do
   describe "DELETE #destroy" do
     let!(:profile_to_destroy) { create(:profile, user: user) }
 
-    it "destroys the profile" do
-      expect {
-        delete :destroy, params: { id: profile_to_destroy.id }
-      }.to change(Profile, :count).by(-1)
+    before do
+      allow(Profiles::Destroy).to receive(:call).and_return({
+        success: true,
+        profile_name: profile_to_destroy.name
+      })
     end
 
-    it "redirects to dashboard" do
+    it "calls Profiles::Destroy service" do
+      expect(Profiles::Destroy).to receive(:call).with(profile: profile_to_destroy)
+      delete :destroy, params: { id: profile_to_destroy.id }
+    end
+
+    it "redirects to dashboard with notice" do
       delete :destroy, params: { id: profile_to_destroy.id }
       expect(response).to redirect_to(dashboard_path)
-      expect(flash[:notice]).to be_present
+      expect(flash[:notice]).to eq("Perfil removido com sucesso.")
+    end
+
+    context "when destruction fails" do
+      before do
+        allow(Profiles::Destroy).to receive(:call).and_return({
+          success: false,
+          error: "Database error"
+        })
+      end
+
+      it "redirects with alert" do
+        delete :destroy, params: { id: profile_to_destroy.id }
+        expect(response).to redirect_to(dashboard_path)
+        expect(flash[:alert]).to eq("Erro ao remover perfil: Database error")
+      end
     end
   end
 
   describe "POST #rescan" do
     before do
-      allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return({ success: true })
+      allow(Profiles::Rescan).to receive(:call).and_return({
+        success: true,
+        message: "Perfil re-escaneado com sucesso."
+      })
     end
 
-    it "calls Profiles::ScrapeAndUpdate" do
-      expect(Profiles::ScrapeAndUpdate).to receive(:call).with(profile)
+    it "calls Profiles::Rescan service" do
+      expect(Profiles::Rescan).to receive(:call).with(profile: profile)
       post :rescan, params: { id: profile.id }
     end
 
     it "redirects to profile with notice" do
       post :rescan, params: { id: profile.id }
       expect(response).to redirect_to(profile)
-      expect(flash[:notice]).to be_present
+      expect(flash[:notice]).to eq("Perfil re-escaneado com sucesso.")
     end
 
-    context "when scraping fails" do
+    context "when rescan fails" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return({ success: false, message: "Error" })
+        allow(Profiles::Rescan).to receive(:call).and_return({
+          success: false,
+          message: "Erro ao re-escanear perfil."
+        })
       end
 
       it "redirects with alert" do
         post :rescan, params: { id: profile.id }
         expect(response).to redirect_to(profile)
-        expect(flash[:alert]).to be_present
+        expect(flash[:alert]).to eq("Erro ao re-escanear perfil.")
       end
     end
   end

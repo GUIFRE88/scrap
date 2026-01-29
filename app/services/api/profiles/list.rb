@@ -34,7 +34,7 @@ module Api
 
       def normalize_per_page(per_page)
         per_page_value = per_page.to_i
-        return DEFAULT_PER_PAGE if per_page_value.zero?
+        return DEFAULT_PER_PAGE if per_page_value <= 0
         return MAX_PER_PAGE if per_page_value > MAX_PER_PAGE
 
         per_page_value

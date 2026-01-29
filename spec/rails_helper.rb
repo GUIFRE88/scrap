@@ -22,6 +22,7 @@ RSpec.configure do |config|
   config.include Rails::Controller::Testing::TestProcess, type: :controller
   config.include Rails::Controller::Testing::TemplateAssertions, type: :controller
   config.include Rails::Controller::Testing::Integration, type: :controller
+  config.include ApplicationHelper, type: :helper
 
   config.filter_rails_from_backtrace!
 end
