@@ -114,13 +114,17 @@ RSpec.describe "Api::AuthController", type: :request do
     end
 
     context "authentication bypass" do
+      let(:test_user) { create(:user, email: "test#{SecureRandom.hex(4)}@example.com", password: "password123") }
+
       it "does not require api token authentication" do
         post "/api/auth/login", params: {
-          email: "test@example.com",
+          email: test_user.email,
           password: "password123"
         }, as: :json
 
         expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json["token"]).to be_present
       end
     end
   end
