@@ -93,3 +93,5 @@ Rails.application.configure do
   # Allow Railway host (fixed)
   config.hosts << "scrap-production-8543.up.railway.app"
 end
+
+Rails.application.config.hosts << "scrap-production-8543.up.railway.app"
