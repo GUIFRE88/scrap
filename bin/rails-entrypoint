@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+
+# Cria diretórios necessários
+mkdir -p tmp/pids
+mkdir -p tmp/cache
+mkdir -p log
+
+# Remove um possível PID antigo
+rm -f tmp/pids/server.pid
+
+# Executa migrations (apenas em produção)
+if [ "$RAILS_ENV" = "production" ]; then
+  echo "Executando migrations..."
+  set +e
+  bundle exec rails db:migrate
+  MIGRATE_EXIT=$?
+  set -e
+  if [ $MIGRATE_EXIT -ne 0 ]; then
+    echo "Aviso: Erro ao executar migrations (exit code: $MIGRATE_EXIT)"
+    echo "Continuando mesmo assim..."
+  else
+    echo "Migrations executadas com sucesso!"
+  fi
+fi
+
+# Pré-compila assets em produção
+if [ "$RAILS_ENV" = "production" ]; then
+  echo "Pré-compilando assets..."
+  set +e
+  bundle exec rails assets:precompile
+  ASSETS_EXIT=$?
+  set -e
+  if [ $ASSETS_EXIT -ne 0 ]; then
+    echo "Aviso: Erro ao pré-compilar assets (exit code: $ASSETS_EXIT)"
+    echo "Continuando mesmo assim (assets serão compilados sob demanda)..."
+  else
+    echo "Assets pré-compilados com sucesso!"
+  fi
+fi
+
+# Executa o servidor usando Puma
+echo "Iniciando servidor Puma..."
+exec bundle exec puma -C config/puma.rb
