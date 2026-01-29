@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# Cria diretórios necessários
+mkdir -p tmp/pids
+mkdir -p tmp/cache
+mkdir -p log
+
 # Remove um possível PID antigo
 rm -f tmp/pids/server.pid
 
