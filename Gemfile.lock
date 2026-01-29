@@ -101,6 +101,10 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
     docile (1.4.1)
+    dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     drb (2.2.3)
     erb (6.0.1)
     erubi (1.13.1)
@@ -296,6 +300,7 @@ DEPENDENCIES
   byebug
   debug
   devise
+  dotenv-rails
   factory_bot_rails
   httparty
   importmap-rails
