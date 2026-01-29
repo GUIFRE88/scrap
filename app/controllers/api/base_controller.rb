@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class BaseController < ApplicationController
     protect_from_forgery with: :null_session
@@ -11,17 +13,17 @@ module Api
     private
 
     def authenticate_api_user!
-      token = request.headers['Authorization']&.gsub(/^Bearer /, '')
+      token = extract_token_from_header
       
       unless token.present?
-        render json: { error: 'Token de autenticação não fornecido' }, status: :unauthorized
+        render_unauthorized('Token de autenticação não fornecido')
         return
       end
 
       @current_api_user = User.find_by(api_token: token)
       
       unless @current_api_user
-        render json: { error: 'Token inválido' }, status: :unauthorized
+        render_unauthorized('Token inválido')
         return
       end
     end
@@ -30,8 +32,16 @@ module Api
       @current_api_user
     end
 
+    def extract_token_from_header
+      request.headers['Authorization']&.gsub(/^Bearer /, '')
+    end
+
     def render_not_found
       render json: { error: 'Not Found' }, status: :not_found
+    end
+
+    def render_unauthorized(message)
+      render json: { error: message }, status: :unauthorized
     end
   end
 end
