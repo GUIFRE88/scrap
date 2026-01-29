@@ -4,25 +4,26 @@ module Profiles
   class Create
     class Error < StandardError; end
 
-    def self.call(user:, profile_params:)
-      new(user: user, profile_params: profile_params).call
+    def self.call(user:, profile_params:, repository: ProfileRepository.new)
+      new(user: user, profile_params: profile_params, repository: repository).call
     end
 
-    def initialize(user:, profile_params:)
+    def initialize(user:, profile_params:, repository:)
       @user = user
       @profile_params = profile_params
+      @repository = repository
     end
 
     def call
       ActiveRecord::Base.transaction do
         profile = build_profile
-        Shortener::EncodeUrl.call(profile)
+        Shortener::EncodeUrl.call(profile, repository: repository)
         
-        unless profile.save
+        unless repository.save(profile)
           return { success: false, profile: profile, errors: profile.errors }
         end
 
-        scrape_result = Profiles::ScrapeAndUpdate.call(profile)
+        scrape_result = Profiles::ScrapeAndUpdate.call(profile, repository: repository)
         
         {
           success: true,
@@ -39,10 +40,10 @@ module Profiles
 
     private
 
-    attr_reader :user, :profile_params
+    attr_reader :user, :profile_params, :repository
 
     def build_profile
-      user.profiles.build(profile_params)
+      repository.build(user, profile_params)
     end
   end
 end

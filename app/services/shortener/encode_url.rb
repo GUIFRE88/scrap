@@ -3,12 +3,13 @@ module Shortener
     ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".freeze
     LENGTH = 8
 
-    def self.call(profile)
-      new(profile).call
+    def self.call(profile, repository: ProfileRepository.new)
+      new(profile, repository: repository).call
     end
 
-    def initialize(profile)
+    def initialize(profile, repository:)
       @profile = profile
+      @repository = repository
     end
 
     def call
@@ -19,10 +20,12 @@ module Shortener
 
     private
 
+    attr_reader :repository
+
     def generate_unique_code
       loop do
         code = random_code
-        break code unless Profile.exists?(short_code: code)
+        break code unless repository.exists?(short_code: code)
       end
     end
 

@@ -7,25 +7,26 @@ module Api
       DEFAULT_PER_PAGE = 10
       MAX_PER_PAGE = 100
 
-      def self.call(page: nil, per_page: nil)
-        new(page: page, per_page: per_page).call
-      end
+    def self.call(page: nil, per_page: nil, repository: ProfileRepository.new)
+      new(page: page, per_page: per_page, repository: repository).call
+    end
 
-      def initialize(page: nil, per_page: nil)
-        @page = normalize_page(page)
-        @per_page = normalize_per_page(per_page)
-      end
+    def initialize(page: nil, per_page: nil, repository:)
+      @page = normalize_page(page)
+      @per_page = normalize_per_page(per_page)
+      @repository = repository
+    end
 
-      def call
-        {
-          profiles: paginated_profiles,
-          meta: build_meta
-        }
-      end
+    def call
+      {
+        profiles: paginated_profiles,
+        meta: build_meta
+      }
+    end
 
-      private
+    private
 
-      attr_reader :page, :per_page
+    attr_reader :page, :per_page, :repository
 
       def normalize_page(page)
         page_value = page.to_i
@@ -40,9 +41,9 @@ module Api
         per_page_value
       end
 
-      def paginated_profiles
-        Profile.paginate(page: page, per_page: per_page)
-      end
+    def paginated_profiles
+      repository.paginate(page: page, per_page: per_page)
+    end
 
       def build_meta
         {

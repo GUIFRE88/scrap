@@ -6,15 +6,16 @@ module Profiles
     DEFAULT_PER_PAGE = 10
     MAX_PER_PAGE = 50
 
-    def self.call(user:, query: nil, page: nil, per_page: nil)
-      new(user: user, query: query, page: page, per_page: per_page).call
+    def self.call(user:, query: nil, page: nil, per_page: nil, repository: ProfileRepository.new)
+      new(user: user, query: query, page: page, per_page: per_page, repository: repository).call
     end
 
-    def initialize(user:, query: nil, page: nil, per_page: nil)
+    def initialize(user:, query: nil, page: nil, per_page: nil, repository:)
       @user = user
       @query = query
       @page = normalize_page(page)
       @per_page = normalize_per_page(per_page)
+      @repository = repository
     end
 
     def call
@@ -26,7 +27,7 @@ module Profiles
 
     private
 
-    attr_reader :user, :query, :page, :per_page
+    attr_reader :user, :query, :page, :per_page, :repository
 
     def normalize_page(page)
       page_value = page.to_i
@@ -53,7 +54,7 @@ module Profiles
     end
 
     def base_scope
-      user.profiles
+      repository.user_profiles(user)
     end
   end
 end
