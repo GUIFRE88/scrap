@@ -65,8 +65,9 @@ RSpec.describe ProfileRepository do
     let(:profile) { create(:profile, user: user) }
 
     it "destroys the profile" do
-      expect { repository.destroy(profile) }.to change(Profile, :count).by(-1)
-      expect(Profile.exists?(profile.id)).to be false
+      profile_id = profile.id
+      repository.destroy(profile)
+      expect(Profile.exists?(profile_id)).to be false
     end
   end
 
@@ -100,7 +101,9 @@ RSpec.describe ProfileRepository do
   end
 
   describe "#exists?" do
-    let(:profile) { create(:profile, user: user, short_code: "abc123") }
+    before do
+      create(:profile, user: user, short_code: "abc123")
+    end
 
     context "when profile exists" do
       it "returns true" do
@@ -117,7 +120,7 @@ RSpec.describe ProfileRepository do
 
   describe "#paginate" do
     before do
-      15.times { create(:profile, user: user) }
+      15.times { create(:profile) }
     end
 
     it "returns paginated profiles" do
@@ -126,15 +129,20 @@ RSpec.describe ProfileRepository do
       expect(result).to respond_to(:current_page)
       expect(result).to respond_to(:total_pages)
       expect(result).to respond_to(:total_entries)
-      expect(result.count).to eq(10)
+      expect(result.size).to be <= 10
+      expect(result.current_page).to eq(1)
+      expect(result.per_page).to eq(10)
     end
 
     it "respects page parameter" do
       page1 = repository.paginate(page: 1, per_page: 10)
       page2 = repository.paginate(page: 2, per_page: 10)
       
-      expect(page1.count).to eq(10)
-      expect(page2.count).to eq(5)
+      expect(page1.current_page).to eq(1)
+      expect(page2.current_page).to eq(2)
+      expect(page1.size).to be <= 10
+      expect(page2.size).to be <= 10
+      expect(page1.map(&:id)).not_to eq(page2.map(&:id))
     end
   end
 

@@ -46,13 +46,13 @@ RSpec.describe Shortener::EncodeUrl do
 
   describe "#random_code" do
     it "generates code with correct length" do
-      service = Shortener::EncodeUrl.new(profile)
+      service = Shortener::EncodeUrl.new(profile, repository: ProfileRepository.new)
       code = service.send(:random_code)
       expect(code.length).to eq(8)
     end
 
     it "uses only allowed characters" do
-      service = Shortener::EncodeUrl.new(profile)
+      service = Shortener::EncodeUrl.new(profile, repository: ProfileRepository.new)
       code = service.send(:random_code)
       expect(code).to match(/\A[a-zA-Z0-9]{8}\z/)
     end
