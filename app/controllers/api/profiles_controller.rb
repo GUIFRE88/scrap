@@ -1,7 +1,5 @@
 module Api
   class ProfilesController < BaseController
-    skip_before_action :authenticate_user!, only: [:index, :show]
-    
     def index
       page = (params[:page] || 1).to_i
       per_page = (params[:per_page] || 10).to_i

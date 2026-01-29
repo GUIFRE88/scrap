@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: { format: :json } do
+    post 'auth/login', to: 'auth#create'
     resources :profiles, only: [:index, :show]
   end
 end
