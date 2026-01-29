@@ -1,6 +1,6 @@
 SHELL := /usr/bin/bash
 
-.PHONY: start start-byebug stop bash bash-test logs clean restart build bundle-install rspec test-db-prepare
+.PHONY: start start-byebug stop bash bash-test logs clean restart build bundle-install rspec
 
 build:
 	docker-compose build
@@ -17,11 +17,8 @@ start-byebug:
 start:
 	docker-compose up --build
 
-test-db-prepare:
-	docker-compose exec -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:postgres@db:5432/scrap_test web bundle exec rails db:test:prepare
-
-rspec: test-db-prepare
-	docker-compose exec -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:postgres@db:5432/scrap_test web bundle exec rspec
+rspec:
+	docker-compose exec -T -e RAILS_ENV=test -e DATABASE_URL=postgres://postgres:postgres@db:5432/scrap_test web bash -c "bundle exec rails db:test:prepare && bundle exec rspec spec"
 
 stop:
 	docker-compose down
