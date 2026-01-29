@@ -26,6 +26,9 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # Copiar o resto da aplicação
 COPY . .
 
+# Tornar scripts executáveis
+RUN chmod +x bin/rails-entrypoint docker-entrypoint.sh
+
 # Expor a porta padrão do Rails
 EXPOSE 3000
 

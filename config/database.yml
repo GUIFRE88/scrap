@@ -1,11 +1,12 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: postgres.railway.internal
-  username: postgres
-  password: sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG
+  host: dpg-d5tj58koud1c73966r60-a
+  username: scrap_rugw_user
+  password: i7Jkvdjh1bHRxBr32D6h07PpwfpvRR3m
   pool: 5
-  url: postgresql://postgres:sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG@postgres.railway.internal:5432/railway
+  url: postgresql://scrap_rugw_user:i7Jkvdjh1bHRxBr32D6h07PpwfpvRR3m@dpg-d5tj58koud1c73966r60-a/scrap_rugw
+  database: scrap_rugw
 
 development:
   <<: *default
@@ -18,8 +19,9 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  host: postgres.railway.internal
-  username: postgres
-  password: sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG
+  host: dpg-d5tj58koud1c73966r60-a
+  username: scrap_rugw_user
+  password: i7Jkvdjh1bHRxBr32D6h07PpwfpvRR3m
   pool: 5
-  url: postgresql://postgres:sjkGwcoxWFnOjTdbfnEkBFtgczszHVXG@postgres.railway.internal:5432/railway
+  url: postgresql://scrap_rugw_user:i7Jkvdjh1bHRxBr32D6h07PpwfpvRR3m@dpg-d5tj58koud1c73966r60-a/scrap_rugw
+  database: scrap_rugw
