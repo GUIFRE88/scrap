@@ -67,5 +67,16 @@
 
       <%= yield %>
     </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+      <div class="loading-content">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+        <p class="mt-3 text-white fw-bold">Processando perfil do GitHub...</p>
+        <p class="text-white-50 small">Aguarde enquanto fazemos o scraping e consultamos a API</p>
+      </div>
+    </div>
   </body>
 </html>
