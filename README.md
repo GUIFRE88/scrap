@@ -69,7 +69,7 @@ API_TOKEN=seu_token_github_aqui
 3. Selecione as permissões necessárias (pelo menos `public_repo` e `read:user`)
 4. Copie o token e cole no arquivo `.env`
 
-### 4. Rodas os teste
+### 4. Rodar os teste no Rspec
 
 ```bash
 make rspec
