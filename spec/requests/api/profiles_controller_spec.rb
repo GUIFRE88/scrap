@@ -25,17 +25,18 @@ RSpec.describe "Api::ProfilesController", type: :request do
         expect(json["meta"]["per_page"]).to eq(10)
       end
 
-      it "returns all profiles regardless of user" do
+      it "returns only profiles from authenticated user" do
         get "/api/profiles", headers: headers
 
         json = JSON.parse(response.body)
         profile_ids = json["data"].map { |p| p["id"] }
         
-        expect(profile_ids).to include(profile1.id, profile2.id, other_user_profile.id)
+        expect(profile_ids).to include(profile1.id, profile2.id)
+        expect(profile_ids).not_to include(other_user_profile.id)
       end
 
       it "respects pagination parameters" do
-        create_list(:profile, 15)
+        create_list(:profile, 15, user: user)
         
         get "/api/profiles", params: { page: 2, per_page: 5 }, headers: headers
 
@@ -90,14 +91,15 @@ RSpec.describe "Api::ProfilesController", type: :request do
         expect(json["meta"]).to be_a(Hash)
       end
 
-      it "returns profile regardless of ownership" do
-        other_profile = create(:profile)
+      it "returns 404 when profile belongs to another user" do
+        other_user = create(:user)
+        other_profile = create(:profile, user: other_user)
         
         get "/api/profiles/#{other_profile.id}", headers: headers
 
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:not_found)
         json = JSON.parse(response.body)
-        expect(json["data"]["id"]).to eq(other_profile.id)
+        expect(json["error"]).to eq("Not Found")
       end
     end
 
