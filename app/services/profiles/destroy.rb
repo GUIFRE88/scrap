@@ -15,10 +15,10 @@ module Profiles
       profile_name = @profile.name
       repository.destroy(@profile)
       
-      { success: true, profile_name: profile_name }
+      { success: true, message: "Perfil removido com sucesso." }
     rescue StandardError => e
       Rails.logger.error("[Profiles::Destroy] Error: #{e.message}")
-      { success: false, error: e.message }
+      { success: false, message: "Erro ao remover perfil: #{e.message}" }
     end
 
     private

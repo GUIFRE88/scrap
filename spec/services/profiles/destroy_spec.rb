@@ -15,11 +15,11 @@ RSpec.describe Profiles::Destroy do
         expect(Profile.find_by(id: profile_id)).to be_nil
       end
 
-      it "returns success result with profile name" do
+      it "returns success result with message" do
         result = described_class.call(profile: profile)
         
         expect(result[:success]).to be true
-        expect(result[:profile_name]).to eq("Test Profile")
+        expect(result[:message]).to eq("Perfil removido com sucesso.")
       end
 
       it "removes profile from database" do
@@ -42,7 +42,7 @@ RSpec.describe Profiles::Destroy do
         result = described_class.call(profile: profile)
         
         expect(result[:success]).to be false
-        expect(result[:error]).to eq("Database error")
+        expect(result[:message]).to eq("Erro ao remover perfil: Database error")
       end
 
       it "logs the error" do

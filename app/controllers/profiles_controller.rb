@@ -57,9 +57,9 @@ class ProfilesController < ApplicationController
     result = Profiles::Destroy.call(profile: @profile)
     
     if result[:success]
-      redirect_to dashboard_path, notice: "Perfil removido com sucesso."
+      redirect_to dashboard_path, notice: result[:message]
     else
-      redirect_to dashboard_path, alert: "Erro ao remover perfil: #{result[:error]}"
+      redirect_to dashboard_path, alert: result[:message]
     end
   end
 

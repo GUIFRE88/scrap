@@ -234,7 +234,7 @@ RSpec.describe ProfilesController, type: :controller do
     before do
       allow(Profiles::Destroy).to receive(:call).and_return({
         success: true,
-        profile_name: profile_to_destroy.name
+        message: "Perfil removido com sucesso."
       })
     end
 
@@ -253,7 +253,7 @@ RSpec.describe ProfilesController, type: :controller do
       before do
         allow(Profiles::Destroy).to receive(:call).and_return({
           success: false,
-          error: "Database error"
+          message: "Erro ao remover perfil: Database error"
         })
       end
 
