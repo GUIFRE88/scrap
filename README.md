@@ -197,6 +197,8 @@ Obs. É necessário criar o arquivo `.env` na raiz do projeto com o seguinte con
 - Redirecionamento para URL original do GitHub
 - Armazenamento no banco de dados
 
+Obs. Não utilizei a `https://bitly.com/` ou outra ferramente pois todas tinham um limite bem expressivo no plano Free, portanto decidi fazer uma estrutura simples de encurtamento de URL e redirect, não dependendo de serviços externo.
+
 ## API RESTful
 
 - **Autenticação**: Token-based (Bearer Token)
