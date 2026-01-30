@@ -69,6 +69,12 @@ API_TOKEN=seu_token_github_aqui
 3. Selecione as permissões necessárias (pelo menos `public_repo` e `read:user`)
 4. Copie o token e cole no arquivo `.env`
 
+### 4. Rodas os teste
+
+```bash
+make rspec
+```
+
 <br>
 
 
@@ -396,7 +402,7 @@ Este projeto está sob a licença MIT.
 
 # 👤 Autor
 
-**Guilherme Freitas**
+**Guilherme Freudenburg**
 
 - GitHub: [@GUIFRE88](https://github.com/GUIFRE88)
 
