@@ -36,20 +36,7 @@ git clone https://github.com/GUIFRE88/scrap.git
 cd scrap
 ```
 
-### 2. Configure o ambiente
-
-#### Opção A: Usando Docker (Recomendado)
-
-```bash
-# Construir e iniciar os containers
-make build
-make start
-
-# Ou usando docker-compose diretamente
-docker-compose up --build
-```
-
-### 3. Configure variáveis de ambiente
+### 2. Configure variáveis de ambiente
 
 Crie um arquivo `.env` na raiz do projeto:
 
@@ -69,7 +56,32 @@ API_TOKEN=seu_token_github_aqui
 3. Selecione as permissões necessárias (pelo menos `public_repo` e `read:user`)
 4. Copie o token e cole no arquivo `.env`
 
-### 4. Rodar os teste no Rspec
+### 3. Configure o ambiente
+
+#### Opção A: Usando Docker (Recomendado)
+
+```bash
+# Construir e iniciar os containers
+make build
+make start
+
+# Ou usando docker-compose diretamente
+docker-compose up --build
+```
+
+### 4. Abrir o bash para rodar as migrations
+
+
+```bash
+# Entra no bash
+make bash
+
+# Rode os 2 comandos
+rails db:create
+rails db:migrate
+```
+
+### 5. Rodar os teste no Rspec
 
 ```bash
 make rspec
