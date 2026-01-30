@@ -56,6 +56,9 @@ pt:
       password_change:
         subject: "Senha alterada"
   activerecord:
+    models:
+      user: "user"
+      profile: "perfil"
     attributes:
       user:
         email: "Email"
@@ -63,6 +66,10 @@ pt:
         password_confirmation: "Confirmação de senha"
         remember_me: "Lembrar-me"
         current_password: "Senha atual"
+      profile:
+        name: "Nome"
+        github_url: "Github url"
+        short_code: "Código curto"
     errors:
       models:
         user:
@@ -77,11 +84,23 @@ pt:
               confirmation: "não confere"
             password_confirmation:
               confirmation: "não confere"
+        profile:
+          invalid: "não é válido"
+          attributes:
+            name:
+              blank: "não pode ficar em branco"
+            github_url:
+              blank: "não pode ficar em branco"
+              invalid: "não é válido. Deve ser uma URL do GitHub (ex: https://github.com/usuario)"
   errors:
     messages:
       not_saved: "Houve %{count} erro ao salvar %{resource}:"
       not_saved_one: "Houve 1 erro ao salvar %{resource}:"
       not_saved_other: "Houve %{count} erros ao salvar %{resource}:"
+      invalid: "não é válido"
+    attributes:
+      github_url:
+        invalid: "não é válido. Deve ser uma URL do GitHub (ex: https://github.com/usuario)"
   time:
     formats:
       short: "%d/%m/%Y %H:%M"
