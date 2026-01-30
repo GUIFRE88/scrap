@@ -10,14 +10,14 @@
 
 É uma ferramenta para Scraping de informações do GITHUB.
 
-### Subir ambiente desenvolvimento (local): 
+# 🚀 Subir ambiente desenvolvimento (local): 
 
-### Acesso a aplicação (deploy): 
+# 🚀 Acesso a aplicação (deploy): 
 * https://scrap-840t.onrender.com/
 
 Obs. As vezes a aplicação é encerrada, ao acessar a URL ele sobe o ambiente novamente.
 
-### Pontuações técnicas sobre o projeto:
+# 🚀 Pontuações técnicas sobre o projeto:
 
 * WebScraping: Para realizar a busca dos valores na página do <b>GITHUB</b> utilizei a gem <b>nokogiri</b>, porém a informação
 de <b>contribuições</b> era carregada de maneira dinamica, portanto foi necessário fazer a consulta pe <b>API</b> do <b>GITHUB</b> para busca dessa informação, portanto para busca total das informações foi necessário utilizar esses 2 métodos.
@@ -32,7 +32,7 @@ Para obter um token do GitHub, acesse: https://github.com/settings/tokens
 
 * Encurtamento de URL: Para realizar o encurtamento da url eu gero um <b>token</b> que será salvo no campo <b>short_code</b> da tabela <b>Profiles</b>, quando o endereço por exemplo: `http://localhost:3000/p/Kl1D2ogg` eu faço um redirect para a url real do <b>GITHUB</b>.
 
-
+# 🚀 Acesso da API: 
 
 Rota da API: 
 
