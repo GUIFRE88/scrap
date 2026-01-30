@@ -25,6 +25,7 @@ RSpec.describe Github::ProfileScraper do
         allow(HTTParty).to receive(:get).with(github_url).and_return(
           double(success?: true, body: html_content)
         )
+        allow(Github::ContributionsClient).to receive(:fetch).with("testuser").and_return(1463)
       end
 
       it "returns parsed profile data" do

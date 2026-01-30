@@ -26,12 +26,14 @@ module Github
       def parse_profile(html)
         doc = Nokogiri::HTML(html)
 
+        github_username = extract_username(doc)
+
         {
-          github_username: extract_username(doc),
+          github_username: github_username,
           followers_count: extract_number(doc, 'a[href$="?tab=followers"] .text-bold'),
           following_count: extract_number(doc, 'a[href$="?tab=following"] .text-bold'),
           stars_count: extract_stars(doc),
-          contributions_last_year: extract_contributions(doc),
+          contributions_last_year: Github::ContributionsClient.fetch(github_username),
           avatar_url: extract_avatar_url(doc),
           organization: extract_optional_text(doc, '.p-org'),
           location: extract_optional_text(doc, '.p-label')

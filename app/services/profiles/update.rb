@@ -4,22 +4,23 @@ module Profiles
   class Update
     class Error < StandardError; end
 
-    def self.call(profile:, profile_params:)
-      new(profile: profile, profile_params: profile_params).call
+    def self.call(profile:, profile_params:, repository: ProfileRepository.new)
+      new(profile: profile, profile_params: profile_params, repository: repository).call
     end
 
-    def initialize(profile:, profile_params:)
+    def initialize(profile:, profile_params:, repository:)
       @profile = profile
       @profile_params = profile_params
+      @repository = repository
     end
 
     def call
       ActiveRecord::Base.transaction do
-        unless @profile.update(profile_params)
+        unless repository.update(@profile, profile_params)
           return { success: false, profile: @profile, errors: @profile.errors }
         end
 
-        scrape_result = Profiles::ScrapeAndUpdate.call(@profile)
+        scrape_result = Profiles::ScrapeAndUpdate.call(@profile, repository: repository)
         
         {
           success: true,
@@ -36,6 +37,6 @@ module Profiles
 
     private
 
-    attr_reader :profile_params
+    attr_reader :profile_params, :repository
   end
 end

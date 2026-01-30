@@ -28,7 +28,7 @@ RSpec.describe Profiles::Update do
       end
 
       it "calls ScrapeAndUpdate service" do
-        expect(Profiles::ScrapeAndUpdate).to receive(:call).once.with(profile)
+        expect(Profiles::ScrapeAndUpdate).to receive(:call).once.with(profile, hash_including(:repository))
         described_class.call(profile: profile, profile_params: profile_params)
       end
 
