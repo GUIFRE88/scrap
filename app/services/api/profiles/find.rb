@@ -3,11 +3,12 @@
 module Api
   module Profiles
     class Find
-    def self.call(id:, repository: ProfileRepository.new)
-      new(id: id, repository: repository).call
+    def self.call(user:, id:, repository: ProfileRepository.new)
+      new(user: user, id: id, repository: repository).call
     end
 
-    def initialize(id:, repository:)
+    def initialize(user:, id:, repository:)
+      @user = user
       @id = id
       @repository = repository
     end
@@ -21,10 +22,10 @@ module Api
 
     private
 
-    attr_reader :id, :repository
+    attr_reader :user, :id, :repository
 
     def profile
-      @profile ||= repository.find(id)
+      @profile ||= repository.user_profiles(user).find(id)
     end
 
       def build_meta

@@ -34,8 +34,11 @@ Para obter um token do GitHub, acesse: https://github.com/settings/tokens
 
 
 
+Rota da API: 
 
-http://localhost:3000/api/auth/login
+`http://localhost:3000/api/auth/login`
+
+Body:
 ```
 {
     "email": "teste@teste.com.br",
@@ -43,6 +46,7 @@ http://localhost:3000/api/auth/login
   }
 ```
 
+Retorno:
 ```
 {
     "token": "82067b1261f58944a7ffa74b69e4dba439c2e5ca26cb7c4e4c674db5bfcb1525",
@@ -54,8 +58,21 @@ http://localhost:3000/api/auth/login
 
 ```
 
+<br>
+Autenticação da API:
 
-http://localhost:3000/api/profiles?per_page=2
+![alt text](https://github.com/GUIFRE88/scrap/blob/main/prints/api1.png)
+
+
+Para a autenticação é feita de maneira manual, após a autenticação do usuário é retornado o token do usuário que o mesmo é utilizado para permitir o acesso da API. A API apresentará apenas usuários que foram cadastrados por ele.
+
+Rora da API:
+
+`http://localhost:3000/api/profiles?per_page=2`
+
+<br>
+Retorno:
+
 ```
 {
     "data": [
@@ -99,11 +116,22 @@ http://localhost:3000/api/profiles?per_page=2
 }
 ```
 
+<br>
+Exemplo:
+
+![alt text](https://github.com/GUIFRE88/scrap/blob/main/prints/api2.png)
+
+<br>
 
 
-http://localhost:3000/api/profiles/128
+`http://localhost:3000/api/profiles/128`
 
+<br>
+Exemplo:
 
+![alt text](https://github.com/GUIFRE88/scrap/blob/main/prints/api3.png)
+
+<br>
 
 
 Para serialização utilizei a <b>JBuilder</b>, pois é a gem que tenho mais contato e ela atendia bem a necessidade da API. 
