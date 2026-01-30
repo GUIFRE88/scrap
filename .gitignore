@@ -33,3 +33,8 @@
 # Ignore SimpleCov coverage reports
 /coverage
 /spec/examples.txt
+
+# Ignore environment variables
+.env
+.env.local
+.env.*.local
