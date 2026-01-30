@@ -71,11 +71,6 @@ module Github
         0
       end
 
-      def extract_contributions(doc)
-        # Fixado valor pois o GitHub retorna dinamicamente o valor de contribuições
-        1463
-      end
-
       def extract_avatar_url(doc)
         doc.at_css('img.avatar-user')&.[]("src")
       end

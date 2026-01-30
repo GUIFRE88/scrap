@@ -134,15 +134,6 @@ RSpec.describe Github::ProfileScraper do
       end
     end
 
-    describe "#extract_contributions" do
-      let(:html_content) { "<html><body></body></html>" }
-
-      it "returns fixed value" do
-        result = described_class.send(:extract_contributions, doc)
-        expect(result).to eq(1463)
-      end
-    end
-
     describe "#extract_avatar_url" do
       let(:html_content) { '<img class="avatar-user" src="https://avatars.githubusercontent.com/u/123" />' }
 
