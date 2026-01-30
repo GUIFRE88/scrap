@@ -8,7 +8,7 @@ RSpec.describe Github::ContributionsClient do
 
     before do
       allow(ENV).to receive(:[]).and_call_original
-      allow(ENV).to receive(:[]).with("GITHUB_TOKEN").and_return(token)
+      allow(ENV).to receive(:[]).with("API_TOKEN").and_return(token)
     end
 
     context "with successful API response" do
@@ -58,10 +58,10 @@ RSpec.describe Github::ContributionsClient do
       end
     end
 
-    context "when GITHUB_TOKEN is not set" do
+    context "when API_TOKEN is not set" do
       before do
         allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with("GITHUB_TOKEN").and_return(nil)
+        allow(ENV).to receive(:[]).with("API_TOKEN").and_return(nil)
         allow(HTTParty).to receive(:post).and_raise(StandardError.new("Unauthorized"))
       end
 

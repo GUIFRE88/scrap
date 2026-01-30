@@ -18,7 +18,7 @@ module Github
         response = HTTParty.post(
           ENDPOINT,
           headers: {
-            "Authorization" => "Bearer #{ENV['GITHUB_TOKEN']}",
+            "Authorization" => "Bearer #{ENV['API_TOKEN']}",
             "Content-Type" => "application/json"
           },
           body: { query: query }.to_json
