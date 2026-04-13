@@ -2,29 +2,25 @@
 
 module Profiles
   class Rescan
-    def self.call(profile:, repository: ProfileRepository.new)
-      new(profile: profile, repository: repository).call
+    def self.call(profile:)
+      new(profile: profile).call
     end
 
-    def initialize(profile:, repository:)
+    def initialize(profile:)
       @profile = profile
-      @repository = repository
     end
 
     def call
-      result = Profiles::ScrapeAndUpdate.call(@profile, repository: repository)
-      
+      Profiles::ScrapeAndUpdateJob.perform_async(@profile.id)
+
       {
-        success: result[:success],
-        message: result[:message] || (result[:success] ? "Perfil re-escaneado com sucesso." : "Erro ao re-escanear perfil.")
+        success: true,
+        message: "Re-escaneamento enfileirado com sucesso."
       }
     rescue StandardError => e
       Rails.logger.error("[Profiles::Rescan] Error: #{e.message}")
       { success: false, message: "Erro ao re-escanear perfil: #{e.message}" }
     end
 
-    private
-
-    attr_reader :repository
   end
 end

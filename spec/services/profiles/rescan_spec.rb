@@ -6,15 +6,13 @@ RSpec.describe Profiles::Rescan do
   let(:profile) { create(:profile) }
 
   describe ".call" do
-    context "when scraping succeeds" do
+    context "when enqueuing succeeds" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: true, message: nil }
-        )
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_return("jid-123")
       end
 
-      it "calls ScrapeAndUpdate service" do
-        expect(Profiles::ScrapeAndUpdate).to receive(:call).once.with(profile, hash_including(:repository))
+      it "enqueues ScrapeAndUpdateJob" do
+        expect(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).once.with(profile.id)
         described_class.call(profile: profile)
       end
 
@@ -22,51 +20,17 @@ RSpec.describe Profiles::Rescan do
         result = described_class.call(profile: profile)
         
         expect(result[:success]).to be true
-        expect(result[:message]).to eq("Perfil re-escaneado com sucesso.")
-      end
-
-      it "returns success result with custom message" do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: true, message: "Custom success message" }
-        )
-        
-        result = described_class.call(profile: profile)
-        expect(result[:message]).to eq("Custom success message")
+        expect(result[:message]).to eq("Re-escaneamento enfileirado com sucesso.")
       end
     end
 
-    context "when scraping fails" do
+    context "when enqueuing fails" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: false, message: "Scraping failed" }
-        )
-      end
-
-      it "returns failure result with message from ScrapeAndUpdate" do
-        result = described_class.call(profile: profile)
-        
-        expect(result[:success]).to be false
-        expect(result[:message]).to eq("Scraping failed")
-      end
-
-      it "returns failure result with default message when message is nil" do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: false, message: nil }
-        )
-        
-        result = described_class.call(profile: profile)
-        expect(result[:success]).to be false
-        expect(result[:message]).to eq("Erro ao re-escanear perfil.")
-      end
-    end
-
-    context "when an exception occurs" do
-      before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_raise(StandardError.new("Unexpected error"))
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_raise(StandardError.new("Unexpected error"))
         allow(Rails.logger).to receive(:error)
       end
 
-      it "returns failure result" do
+      it "returns failure result with error message" do
         result = described_class.call(profile: profile)
         
         expect(result[:success]).to be false

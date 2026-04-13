@@ -1,0 +1,4 @@
+:concurrency: 5
+:queues:
+  - [scrape_and_update, 3]
+  - [default, 1]

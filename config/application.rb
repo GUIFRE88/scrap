@@ -38,6 +38,7 @@ module Scrap
     # Default host for URL generation (usado em production)
     config.action_mailer.default_url_options = { host: ENV['HOST'] || 'localhost:3000' }
     Rails.application.routes.default_url_options[:host] = ENV['HOST'] || 'localhost:3000'
+    config.active_job.queue_adapter = :sidekiq
 
     # Don't generate system test files.
     config.generators.system_tests = nil

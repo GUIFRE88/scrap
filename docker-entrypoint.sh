@@ -34,5 +34,8 @@ else
   bundle install
 fi
 
-# Executa o servidor Rails
-exec rails server -b 0.0.0.0
+if [ "$#" -eq 0 ]; then
+  set -- rails server -b 0.0.0.0
+fi
+
+exec "$@"
