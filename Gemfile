@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.10"
+ruby "3.2.11"
 
 gem "rails", "~> 7.0.10"
 gem "sprockets-rails"
@@ -17,6 +17,8 @@ gem "sassc-rails"
 gem "will_paginate", "~> 3.3"
 gem "httparty"
 gem "nokogiri"
+gem "sidekiq"
+gem "redis"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 

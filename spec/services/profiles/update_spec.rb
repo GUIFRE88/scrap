@@ -14,9 +14,7 @@ RSpec.describe Profiles::Update do
   describe ".call" do
     context "when update succeeds" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: true, message: nil }
-        )
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_return("jid-123")
       end
 
       it "updates profile attributes" do
@@ -27,8 +25,8 @@ RSpec.describe Profiles::Update do
         expect(profile.github_url).to eq("https://github.com/newuser")
       end
 
-      it "calls ScrapeAndUpdate service" do
-        expect(Profiles::ScrapeAndUpdate).to receive(:call).once.with(profile, hash_including(:repository))
+      it "enqueues ScrapeAndUpdateJob" do
+        expect(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).once.with(profile.id)
         described_class.call(profile: profile, profile_params: profile_params)
       end
 
@@ -38,14 +36,13 @@ RSpec.describe Profiles::Update do
         expect(result[:success]).to be true
         expect(result[:profile]).to eq(profile)
         expect(result[:scrape_success]).to be true
+        expect(result[:scrape_message]).to eq("Extração de dados do Github enfileirada.")
       end
     end
 
-    context "when scraping succeeds" do
+    context "when enqueuing succeeds" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: true, message: nil }
-        )
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_return("jid-123")
       end
 
       it "returns scrape_success as true" do
@@ -54,11 +51,9 @@ RSpec.describe Profiles::Update do
       end
     end
 
-    context "when scraping fails" do
+    context "when enqueuing succeeds" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: false, message: "Scraping error" }
-        )
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_return("jid-123")
       end
 
       it "still updates the profile" do
@@ -68,10 +63,10 @@ RSpec.describe Profiles::Update do
         expect(profile.name).to eq("New Name")
       end
 
-      it "returns scrape_success as false" do
+      it "returns scrape_success as true" do
         result = described_class.call(profile: profile, profile_params: profile_params)
-        expect(result[:scrape_success]).to be false
-        expect(result[:scrape_message]).to eq("Scraping error")
+        expect(result[:scrape_success]).to be true
+        expect(result[:scrape_message]).to eq("Extração de dados do Github enfileirada.")
       end
     end
 
@@ -100,8 +95,8 @@ RSpec.describe Profiles::Update do
         expect(result[:errors]).to be_present
       end
 
-      it "does not call ScrapeAndUpdate" do
-        expect(Profiles::ScrapeAndUpdate).not_to receive(:call)
+      it "does not enqueue ScrapeAndUpdateJob" do
+        expect(Profiles::ScrapeAndUpdateJob).not_to receive(:perform_async)
         described_class.call(profile: profile, profile_params: invalid_params)
       end
     end
@@ -134,18 +129,19 @@ RSpec.describe Profiles::Update do
       end
     end
 
-    context "transaction rollback" do
+    context "when enqueuing raises an exception" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_raise(StandardError.new("Transaction error"))
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_raise(StandardError.new("Queue error"))
         allow(Rails.logger).to receive(:error)
       end
 
-      it "rolls back the transaction" do
-        original_name = profile.name
-        described_class.call(profile: profile, profile_params: profile_params)
-        
+      it "keeps profile update and returns failure payload" do
+        result = described_class.call(profile: profile, profile_params: profile_params)
+
         profile.reload
-        expect(profile.name).to eq(original_name)
+        expect(profile.name).to eq("New Name")
+        expect(result[:success]).to be false
+        expect(result[:error]).to eq("Queue error")
       end
     end
   end

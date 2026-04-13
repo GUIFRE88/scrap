@@ -11,25 +11,10 @@ RSpec.describe Profiles::Create do
     }
   end
 
-  let(:scraped_data) do
-    {
-      github_username: "testuser",
-      followers_count: 100,
-      following_count: 50,
-      stars_count: 25,
-      contributions_last_year: 200,
-      avatar_url: "https://avatars.githubusercontent.com/u/123",
-      organization: "Test Org",
-      location: "Test City"
-    }
-  end
-
   describe ".call" do
     context "when profile creation succeeds" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: true, message: nil }
-        )
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_return("jid-123")
       end
 
       it "creates a new profile" do
@@ -52,8 +37,8 @@ RSpec.describe Profiles::Create do
         expect(result[:profile].user_id).to eq(user.id)
       end
 
-      it "calls ScrapeAndUpdate service" do
-        expect(Profiles::ScrapeAndUpdate).to receive(:call).once
+      it "enqueues ScrapeAndUpdateJob" do
+        expect(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).once.with(kind_of(Integer))
         described_class.call(user: user, profile_params: profile_params)
       end
 
@@ -63,6 +48,7 @@ RSpec.describe Profiles::Create do
         expect(result[:success]).to be true
         expect(result[:profile]).to be_a(Profile)
         expect(result[:scrape_success]).to be true
+        expect(result[:scrape_message]).to eq("Extração de dados do Github enfileirada.")
       end
 
       it "saves profile attributes" do
@@ -73,24 +59,9 @@ RSpec.describe Profiles::Create do
       end
     end
 
-    context "when scraping succeeds" do
+    context "when enqueuing succeeds" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: true, message: nil }
-        )
-      end
-
-      it "returns scrape_success as true" do
-        result = described_class.call(user: user, profile_params: profile_params)
-        expect(result[:scrape_success]).to be true
-      end
-    end
-
-    context "when scraping fails" do
-      before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_return(
-          { success: false, message: "Scraping error" }
-        )
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_return("jid-123")
       end
 
       it "still creates the profile" do
@@ -99,10 +70,10 @@ RSpec.describe Profiles::Create do
         }.to change(Profile, :count).by(1)
       end
 
-      it "returns scrape_success as false" do
+      it "returns scrape_success as true" do
         result = described_class.call(user: user, profile_params: profile_params)
-        expect(result[:scrape_success]).to be false
-        expect(result[:scrape_message]).to eq("Scraping error")
+        expect(result[:scrape_success]).to be true
+        expect(result[:scrape_message]).to eq("Extração de dados do Github enfileirada.")
       end
     end
 
@@ -129,8 +100,8 @@ RSpec.describe Profiles::Create do
         expect(result[:errors]).to be_present
       end
 
-      it "does not call ScrapeAndUpdate" do
-        expect(Profiles::ScrapeAndUpdate).not_to receive(:call)
+      it "does not enqueue ScrapeAndUpdateJob" do
+        expect(Profiles::ScrapeAndUpdateJob).not_to receive(:perform_async)
         described_class.call(user: user, profile_params: invalid_params)
       end
     end
@@ -161,16 +132,18 @@ RSpec.describe Profiles::Create do
       end
     end
 
-    context "transaction rollback" do
+    context "when enqueuing raises an exception" do
       before do
-        allow(Profiles::ScrapeAndUpdate).to receive(:call).and_raise(StandardError.new("Transaction error"))
+        allow(Profiles::ScrapeAndUpdateJob).to receive(:perform_async).and_raise(StandardError.new("Queue error"))
         allow(Rails.logger).to receive(:error)
       end
 
-      it "rolls back the transaction" do
+      it "keeps created profile and returns failure payload" do
         expect {
-          described_class.call(user: user, profile_params: profile_params)
-        }.not_to change(Profile, :count)
+          @result = described_class.call(user: user, profile_params: profile_params)
+        }.to change(Profile, :count).by(1)
+        expect(@result[:success]).to be false
+        expect(@result[:error]).to eq("Queue error")
       end
     end
   end

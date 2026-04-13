@@ -16,6 +16,12 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: scrap_redis
+    ports:
+      - "6379:6379"
+
   web:
     build: .
     container_name: scrap_web
@@ -30,9 +36,29 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/scrap_development
       RAILS_ENV: development
+      REDIS_URL: redis://redis:6379/0
+
+  sidekiq:
+    build: .
+    container_name: scrap_sidekiq
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/scrap_development
+      RAILS_ENV: development
+      REDIS_URL: redis://redis:6379/0
+    command: bundle exec sidekiq -C config/sidekiq.yml
 
 volumes:
   postgres_data:

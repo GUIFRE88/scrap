@@ -15,23 +15,22 @@ module Profiles
     end
 
     def call
-      ActiveRecord::Base.transaction do
+      result = ActiveRecord::Base.transaction do
         profile = build_profile
         Shortener::EncodeUrl.call(profile, repository: repository)
-        
+
         unless repository.save(profile)
           return { success: false, profile: profile, errors: profile.errors }
         end
 
-        scrape_result = Profiles::ScrapeAndUpdate.call(profile, repository: repository)
-        
         {
           success: true,
-          profile: profile,
-          scrape_success: scrape_result[:success],
-          scrape_message: scrape_result[:message]
+          profile: profile
         }
       end
+
+      Profiles::ScrapeAndUpdateJob.perform_async(result[:profile].id)
+      result.merge(scrape_success: true, scrape_message: "Extração de dados do Github enfileirada.")
     rescue StandardError => e
       Rails.logger.error("[Profiles::Create] Error: #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))

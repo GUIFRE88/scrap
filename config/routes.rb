@@ -1,3 +1,5 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   devise_for :users, controllers: { 
     sessions: 'users/sessions',
@@ -15,6 +17,7 @@ Rails.application.routes.draw do
   get 'dashboard', to: 'home#dashboard', as: :dashboard
 
   authenticated :user do
+    mount Sidekiq::Web => "/sidekiq"
     root 'home#dashboard', as: :authenticated_root
   end
 
